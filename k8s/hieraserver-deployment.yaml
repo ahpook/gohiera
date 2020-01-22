@@ -1,0 +1,34 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  creationTimestamp: null
+  labels:
+    app: hieraserver
+  name: hieraserver
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: hieraserver
+  strategy: {}
+  template:
+    metadata:
+      creationTimestamp: null
+      labels:
+        app: hieraserver
+    spec:
+      containers:
+      - image: docker.io/lyraproj/hiera:latest
+        name: hiera
+        resources: {}
+        env:
+        - name: config
+          value: /hiera/config/hiera.yaml
+        volumeMounts:
+        - name: hiera-data-volume
+          mountPath: /hiera
+      volumes:
+      - name: hiera-data-volume
+        gcePersistentDisk:
+          pdName: hiera-data-volume
+          fsType: ext4
